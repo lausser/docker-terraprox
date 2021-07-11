@@ -124,7 +124,7 @@ elif [ "$1" == "apply" ]; then
       --auto-approve \
       -input=false     ${VAR_TARGET_NODE:-}
   elif [ "$virtualization" == "aws" ]; then
-    if [[ $distro =~ ^ami ]; then
+    if [[ $distro =~ ^ami ]]; then
       ami=$distro
       vmuser=packer
     elif [ $distro == "debian-10.10" ]; then
