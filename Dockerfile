@@ -36,8 +36,8 @@ RUN mkdir -p ./usr/share/terraform/plugins/terraform.local/local/proxmox/1.0.0/l
 
 USER root
 COPY entrypoint.sh /home/terraform
-COPY proxmox /home/terraform
-COPY aws /home/terraform
+COPY proxmox/* /home/terraform/proxmox/
+COPY aws/* /home/terraform/aws/
 COPY .terraformrc /home/terraform
 RUN chown terraform:terraform /home/terraform/*
 RUN chmod 755 /home/terraform/entrypoint.sh
