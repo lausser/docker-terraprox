@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tf-scripts
+data:
+  runscript.sh: |
+    #!/bin/bash
+    bash -x ./entrypoint.sh $*
+    #sleep 100000
+

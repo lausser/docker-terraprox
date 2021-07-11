@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-vm
+spec:
+  ttlSecondsAfterFinished: 60
+  backoffLimit: 4
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: terraform-apply
+          imagePullPolicy: Always
+          image: lausser/terraprox:1.0
+          command: [ "/scripts/runscript.sh" ]
+          args: ["apply"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+          envFrom:
+            - configMapRef:
+                name: env-infra
+            - configMapRef:
+                name: env-build
+            - configMapRef:
+                name: env-uuid
+      volumes:
+      - name: scripts
+        configMap:
+          name: tf-scripts
+          defaultMode: 0755

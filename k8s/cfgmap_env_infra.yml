@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-infra
+data:
+  PM_USER: packer@pve
+  PM_PASS: ***
+  PM_API_URL: https://proxmox:8006/api2/json
+  SSH_PASSWORD: ***
+  CONSUL_ADDRESS: consul-ui.infra-build

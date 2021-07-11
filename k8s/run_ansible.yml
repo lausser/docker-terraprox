@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ansible
+data:
+  runscript.sh: |
+    #!/bin/bash
+    ip=$(curl "http://consul-ui.infra-build/v1/kv/nslookup/b-omd-centos-7.7-dnstest?dc=dc1&raw=1)
+    # git clone all the needed ansible roles
+    # complete the playbook.yml
+    # run ansible-playbook
+    #bash -x ./entrypoint.sh $*
+    sleep 100000
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ansible
+#  namespace: testxy
+spec:
+  restartPolicy: Never
+  containers:
+    - name: ansible
+      image: lausser/terraprox
+      command: [ "/scripts/runscript.sh" ]
+      #args: ["apply"]
+      volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+      # get env-build
+  volumes:
+  - name: scripts
+    configMap:
+      name: ansible
+      defaultMode: 0755

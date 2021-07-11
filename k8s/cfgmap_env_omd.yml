@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-build
+data:
+  PRODUCT: omd
+  DISTRIBUTION: centos-7.7

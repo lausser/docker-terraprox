@@ -1,0 +1,18 @@
+* 2021-05-01 2.0
+  update modules, add build&release
+* 2020-11-06 1.3
+  accept environment variable PM_NODE (can be a comma-separated list)
+* 2020-11-05 1.2
+  remove the consul tfstate on cleanup
+* 2020-11-05 1.1.4
+  use bash for the entrypoint.sh
+* 2020-11-05 1.1.3
+  fix state subcommand
+* 2020-11-05 1.1.2
+  run terraform init by default
+* 2020-11-05 1.1.1
+  fix entrypoint bugs
+* 2020-11-04 1.1
+  entrypoint.sh differentiates between terraform commands
+* 2020-10-25 1.0
+  init

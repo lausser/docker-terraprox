@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: destroy-vm
+spec:
+  ttlSecondsAfterFinished: 60
+  backoffLimit: 4
+  template: 
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: terraform-apply
+          image: lausser/terraprox:1.0
+          command: [ "/scripts/runscript.sh" ]
+          args: ["destroy"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+          envFrom:
+            - configMapRef:
+                name: env-infra
+            - configMapRef: 
+                name: env-uuid
+      volumes:
+      - name: scripts
+        configMap:
+          name: tf-scripts
+          defaultMode: 0755
