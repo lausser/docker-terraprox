@@ -100,10 +100,9 @@ resource "consul_service" "node_exporter" {
 EOTF
 fi
 
-for i in *_${virtualization}.tf.txt
+for i in ${virtualization}/*.tf.txt
 do
-  j=${i/_$virtualization/}
-  cp $i ${j/.txt/}
+  cp $i $(basename $i .txt)
 done
 
 terraform init
