@@ -1,0 +1,14 @@
+# vpc von Hand anlegen oder 1x von TF
+# damit es nich tzerstoert wird beim terraform destroy, wird es anders referenziert
+
+data "aws_vpc" "vpc" {
+  tags = {
+    Name = "build_vpc"
+  }
+}
+
+oder
+
+data "aws_vpc" "vpc" {
+  id = "vpc-nnnnnnnn"
+}
