@@ -107,6 +107,9 @@ done
 
 terraform init
 
+export TF_LOG=TRACE
+export TF_LOG_PATH="terraform.log"
+
 if [ "$1" == "passthrough" ]; then
   terraform $*
 
@@ -141,6 +144,16 @@ elif [ "$1" == "apply" ]; then
 elif [ "$1" == "destroy" ]; then
   terraform destroy \
     --auto-approve -input=false
+  if { grep -q "Error: rbd error: rbd: listing images failed:" terraform.log; }; then
+    # concurrent operations 
+    # Could not remove disk 'ceph01:vm-117-cloudinit', check manually: cfs-lock 'storage-ceph01' error: got lock request timeout
+    # Could not remove disk 'ceph01:base-106-disk-0/vm-117-disk-0', check manually: cfs-lock 'storage-ceph01' error: got lock request timeout
+    # retry after a random time
+    rm -f terraform.log
+    sleep $(($RANDOM %300))
+    terraform destroy \
+      --auto-approve -input=false
+  fi
 
 elif [ "$1"  == "cleanup" ]; then
   if [ -n "$CONSUL_ADDRESS" ]; then
