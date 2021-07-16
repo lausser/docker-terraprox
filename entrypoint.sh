@@ -125,6 +125,24 @@ elif [ "$1" == "apply" ]; then
       -var memory=32768 \
       --auto-approve \
       -input=false     ${VAR_TARGET_NODE:-}
+    if { grep -q "Error: Plugin did not respond" terraform.log; }; then
+      # concurrent operations
+      # retry after a random time
+      rm -f terraform.log
+      sleep $(($RANDOM %300))
+      #terraform destroy \
+      #  --auto-approve -input=false
+      terraform apply \
+        -var ssh_password="$SSH_PASSWORD" \
+        -var vm_clone=t-${distro} \
+        -var vm_name=${vmname} \
+        -var "vm_desc=${vmdesc}" \
+        -var cpu_sockets=2 \
+        -var cpu_cores=4 \
+        -var memory=32768 \
+        --auto-approve \
+        -input=false     ${VAR_TARGET_NODE:-}
+    fi
   elif [ "$virtualization" == "aws" ]; then
     if [[ $distro =~ ^ami ]]; then
       ami=$distro
