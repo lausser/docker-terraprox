@@ -130,8 +130,10 @@ elif [ "$1" == "apply" ]; then
       # retry after a random time
       rm -f terraform.log
       sleep $(($RANDOM %300))
-      #terraform destroy \
-      #  --auto-approve -input=false
+      terraform destroy \
+        --auto-approve -input=false
+      rm -f terraform.log
+      sleep $(($RANDOM %60))
       terraform apply \
         -var ssh_password="$SSH_PASSWORD" \
         -var vm_clone=t-${distro} \
