@@ -105,6 +105,9 @@ do
   cp $i $(basename $i .txt)
 done
 
+ls -l
+cat *.tf
+
 terraform init
 
 export TF_LOG=TRACE
