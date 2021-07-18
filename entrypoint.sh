@@ -100,8 +100,10 @@ resource "consul_service" "node_exporter" {
 EOTF
 fi
 
+virtualization is ${virtualization}
 for i in ${virtualization}/*.tf.txt
 do
+  echo cp $i $(basename $i .txt)
   cp $i $(basename $i .txt)
 done
 
