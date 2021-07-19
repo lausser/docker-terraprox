@@ -40,6 +40,7 @@ if [ $virtualization = "proxmox" -a -n "$PM_NODE" ]; then
   VAR_TARGET_NODE="-var target_node=$PM_NODE"
 elif [ $virtualization = "aws" ]; then
   AWS_OWNER=${AWS_OWNER:-build}
+  SSH_PASSWORD_ENCRYPTED=$(python3 -c 'import crypt; import os; print( crypt.crypt(os.environ["SSH_PASSWORD"], "$6$saltsalt$"))')
 fi
 
 if [ -z "$VM_DESC" ]; then
@@ -123,7 +124,7 @@ if [ "$1" == "passthrough" ]; then
 elif [ "$1" == "apply" ]; then
   if [ "$virtualization" == "proxmox" ]; then
     terraform apply \
-      -var ssh_password="$SSH_PASSWORD" \
+      -var ssh_password="$SSH_PASSWORD_ENCRYPTED" \
       -var vm_clone=t-${distro} \
       -var vm_name=${vmname} \
       -var "vm_desc=${vmdesc}" \
@@ -142,7 +143,7 @@ elif [ "$1" == "apply" ]; then
       rm -f terraform.log
       sleep $(($RANDOM %60))
       terraform apply \
-        -var ssh_password="$SSH_PASSWORD" \
+        -var ssh_password="$SSH_PASSWORD_ENCRYPTED" \
         -var vm_clone=t-${distro} \
         -var vm_name=${vmname} \
         -var "vm_desc=${vmdesc}" \
@@ -162,7 +163,7 @@ elif [ "$1" == "apply" ]; then
     fi
     terraform apply \
       -var owner="$AWS_OWNER" \
-      -var ssh_password="$SSH_PASSWORD" \
+      -var ssh_password="$SSH_PASSWORD_ENCRYPTED" \
       -var instance_ami=${ami} \
       -var ssh_user=${vmuser} \
       --auto-approve \

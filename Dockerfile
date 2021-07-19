@@ -40,7 +40,7 @@ COPY proxmox/ /home/terraform/proxmox
 COPY aws/ /home/terraform/aws
 COPY ansible/ /home/terraform/ansible
 COPY .terraformrc /home/terraform
-RUN chown terraform:terraform /home/terraform/*
+RUN chown -R terraform:terraform /home/terraform/*
 RUN chmod 755 /home/terraform/entrypoint.sh
 COPY Changelog /home/terraform
 ADD VERSION .

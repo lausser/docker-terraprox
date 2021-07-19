@@ -1,4 +1,4 @@
---
+---
 - hosts: all
   become: yes
   tasks:
@@ -14,16 +14,23 @@
       dest: /etc/sudoers.d/wheel_nopasswd
       mode: 0440
 
-- name: configure sshd
-  lineinfile:
-    path: "/etc/ssh/sshd_config"
-    regex: "^(#)?{{item.key}}"
-    line: "{{item.key}} {{item.value}}"
-    state: present
-  loop:
-    - { key: "PermitRootLogin", value: "yes" }
-    - { key: "PasswordAuthentication", value: "yes" } 
-  notify:
+  - name: allow older password encryptions
+    lineinfile:
+      path: "/etc/login.defs"
+      regexp: "^ENCRYPT_METHOD"
+      line: "ENCRYPT_METHOD MD5"
+      state: present
+      create: no
+      backrefs: yes
+    ignore_errors: yes
+
+  - name: configure sshd
+    lineinfile:
+      path: "/etc/ssh/sshd_config"
+      regexp: "^(#)?PasswordAuthentication.*"
+      line: "PasswordAuthentication yes"
+      state: present
+    notify:
     - restart_sshd
 
   - name: add sudoers users to wheel group
