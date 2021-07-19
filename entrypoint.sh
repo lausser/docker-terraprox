@@ -1,5 +1,6 @@
 #! /bin/bash
 
+set -x
 
 mkdir /home/terraform/.ssh && \
 chmod 700 /home/terraform/.ssh && \
@@ -71,7 +72,7 @@ resource "consul_keys" "nslookup" {
   # key is the vm name, value is the ip address
   key {
     path   = "nslookup/\${var.vm_name}"
-    value  = proxmox_vm_qemu.cloudinit-vm.ssh_host
+    value  = VM_ADDRESS
     delete = true
   }
 }
@@ -79,7 +80,7 @@ resource "consul_keys" "nslookup" {
 # can be used later for dns lookups, services
 resource "consul_node" "hostname" {
   name    = var.vm_name
-  address = proxmox_vm_qemu.cloudinit-vm.ssh_host
+  address = VM_ADDRESS
 }
 EOTF
   cat > consul_service.tf.no <<EOTF
@@ -92,7 +93,7 @@ resource "consul_service" "node_exporter" {
     check_id                          = "service:node_exporter"
     name                              = "Prometheus Node Exporter"
     status                            = "passing"
-    http                              = "http://\${proxmox_vm_qemu.cloudinit-vm.ssh_host}:9100"
+    http                              = "http://\${VM_ADDRESS}:9100"
     tls_skip_verify                   = true
     method                            = "GET"
     interval                          = "60s"
@@ -101,6 +102,11 @@ resource "consul_service" "node_exporter" {
   }
 }
 EOTF
+  if [ "$virtualization" == "proxmox" ]; then
+    sed -ri 's/VM_ADDRESS/proxmox_vm_qemu.cloudinit-vm.ssh_host/g' consul_*.tf
+  elif [ "$virtualization" == "aws" ]; then
+    sed -ri 's/VM_ADDRESS/aws_instance.instance.public_ip/g' consul_*.tf
+  fi
 fi
 
 virtualization is ${virtualization}
