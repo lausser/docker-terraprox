@@ -168,6 +168,7 @@ elif [ "$1" == "apply" ]; then
       vmuser=admin
     fi
     terraform apply \
+      -var vm_name=${vmname} \
       -var owner="$AWS_OWNER" \
       -var ssh_password="$SSH_PASSWORD_ENCRYPTED" \
       -var instance_ami=${ami} \
