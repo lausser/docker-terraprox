@@ -38,7 +38,7 @@ if [ $virtualization = "proxmox" -a -n "$PM_NODE" ]; then
     PM_NODE=${nodes[$(shuf -n 1 -i 0-$(("${#nodes[@]}" -1)))]}
   fi
   VAR_TARGET_NODE="-var target_node=$PM_NODE"
-elif [ "virtualization = "aws" ]; then
+elif [ $virtualization = "aws" ]; then
   AWS_OWNER=${AWS_OWNER:-build}
 fi
 
