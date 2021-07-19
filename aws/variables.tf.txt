@@ -142,3 +142,8 @@ variable "ssh_user" {
   default     = "admin"
 }
 
+variable "ssh_password" {
+    type = string
+    default = "geheim"
+}
+

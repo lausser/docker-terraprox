@@ -38,6 +38,8 @@ if [ $virtualization = "proxmox" -a -n "$PM_NODE" ]; then
     PM_NODE=${nodes[$(shuf -n 1 -i 0-$(("${#nodes[@]}" -1)))]}
   fi
   VAR_TARGET_NODE="-var target_node=$PM_NODE"
+elif [ "virtualization = "aws" ]; then
+  AWS_OWNER=${AWS_OWNER:-build}
 fi
 
 if [ -z "$VM_DESC" ]; then
@@ -159,6 +161,7 @@ elif [ "$1" == "apply" ]; then
       vmuser=admin
     fi
     terraform apply \
+      -var owner="$AWS_OWNER" \
       -var ssh_password="$SSH_PASSWORD" \
       -var instance_ami=${ami} \
       -var ssh_user=${vmuser} \
@@ -167,16 +170,22 @@ elif [ "$1" == "apply" ]; then
   fi
 
 elif [ "$1" == "destroy" ]; then
-  terraform destroy \
-    --auto-approve -input=false
-  if { grep -q "Error: rbd error: rbd: listing images failed:" terraform.log; }; then
-    # concurrent operations 
-    # Could not remove disk 'ceph01:vm-117-cloudinit', check manually: cfs-lock 'storage-ceph01' error: got lock request timeout
-    # Could not remove disk 'ceph01:base-106-disk-0/vm-117-disk-0', check manually: cfs-lock 'storage-ceph01' error: got lock request timeout
-    # retry after a random time
-    rm -f terraform.log
-    sleep $(($RANDOM %300))
+  if [ "$virtualization" == "proxmox" ]; then
     terraform destroy \
+      --auto-approve -input=false
+    if { grep -q "Error: rbd error: rbd: listing images failed:" terraform.log; }; then
+      # concurrent operations
+      # Could not remove disk 'ceph01:vm-117-cloudinit', check manually: cfs-lock 'storage-ceph01' error: got lock request timeout
+      # Could not remove disk 'ceph01:base-106-disk-0/vm-117-disk-0', check manually: cfs-lock 'storage-ceph01' error: got lock request timeout
+      # retry after a random time
+      rm -f terraform.log
+      sleep $(($RANDOM %300))
+      terraform destroy \
+        --auto-approve -input=false
+    fi
+  elif [ "$virtualization" == "aws" ]; then
+    terraform destroy \
+      -var owner="$AWS_OWNER" \
       --auto-approve -input=false
   fi
 

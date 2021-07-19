@@ -32,6 +32,13 @@ resource "aws_instance" "instance" {
       "/sbin/ip a"
     ]
   }
+  provisioner "local-exec" {
+    command =<<EOCMD
+    if [ "${var.ansible_playbook}" != "" ]; then
+      ansible-playbook ansible/playbooks/${var.ansible_playbook} -i ${self.public_ip}, -u ${var.ssh_user} -b --extra-vars "ssh_password=${bcrypt(var.ssh_password)}"
+    fi
+    EOCMD
+  }
 
 }
 
