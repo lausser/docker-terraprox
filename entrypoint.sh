@@ -130,7 +130,7 @@ if [ "$1" == "passthrough" ]; then
 elif [ "$1" == "apply" ]; then
   if [ "$virtualization" == "proxmox" ]; then
     terraform apply \
-      -var ssh_password="$SSH_PASSWORD_ENCRYPTED" \
+      -var ssh_password="$SSH_PASSWORD" \
       -var vm_clone=t-${distro} \
       -var vm_name=${vmname} \
       -var "vm_desc=${vmdesc}" \
@@ -149,7 +149,7 @@ elif [ "$1" == "apply" ]; then
       rm -f terraform.log
       sleep $(($RANDOM %60))
       terraform apply \
-        -var ssh_password="$SSH_PASSWORD_ENCRYPTED" \
+        -var ssh_password="$SSH_PASSWORD" \
         -var vm_clone=t-${distro} \
         -var vm_name=${vmname} \
         -var "vm_desc=${vmdesc}" \
