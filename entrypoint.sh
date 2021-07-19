@@ -109,7 +109,7 @@ EOTF
   fi
 fi
 
-virtualization is ${virtualization}
+echo virtualization is ${virtualization}
 for i in ${virtualization}/*.tf.txt
 do
   echo cp $i $(basename $i .txt)

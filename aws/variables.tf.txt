@@ -147,6 +147,11 @@ variable "ssh_password" {
     default = "geheim"
 }
 
+variable "vm_name" {
+    type = string
+    default = "myvm"
+}
+
 variable "ansible_playbook" {
     type = string
     default = "packer.yml"
