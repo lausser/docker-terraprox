@@ -174,7 +174,7 @@ elif [ "$1" == "apply" ]; then
       -var instance_ami=${ami} \
       -var ssh_user=${vmuser} \
       --auto-approve \
-      -input=false     ${VAR_TARGET_NODE:-}
+      -input=false
   fi
 
 elif [ "$1" == "destroy" ]; then

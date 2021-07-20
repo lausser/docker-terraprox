@@ -3,8 +3,8 @@ resource "aws_instance" "instance" {
   availability_zone           = "${var.aws_region}${var.aws_region_az}"
   instance_type               = var.instance_type
   associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.sg.id]
-  subnet_id                   = aws_subnet.subnet.id
+  vpc_security_group_ids      = [data.aws_security_group.sg.id]
+  subnet_id                   = data.aws_subnet.subnet.id
   key_name                    = var.key_pair
  
   root_block_device {
