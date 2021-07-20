@@ -16,7 +16,7 @@ resource "aws_instance" "instance" {
  
   tags = {
     "Owner"               = var.owner
-    "Name"                = "${var.owner}-instance"
+    "Name"                = "${var.owner}-${var.vm_name}-instance"
     "KeepInstanceRunning" = "false"
   }
 
