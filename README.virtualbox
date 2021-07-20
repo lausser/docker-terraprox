@@ -1,0 +1,2 @@
+yum install centos-release-ansible-29.noarch -> repo
+yum install ansible
