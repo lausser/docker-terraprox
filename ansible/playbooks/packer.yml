@@ -1,0 +1,53 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+
+  - name: create a packer user
+    when: 'ssh_user != "packer"'
+    block:
+    - name: make sure we have a wheel group
+      group:
+        name: wheel
+        state: present
+  
+    - name: sudo without password for wheel group
+      copy:
+        content: '%wheel ALL=(ALL:ALL) NOPASSWD:ALL'
+        dest: /etc/sudoers.d/wheel_nopasswd
+        mode: 0440
+  
+    - name: allow older password encryptions
+      lineinfile:
+        path: "/etc/login.defs"
+        regexp: "^ENCRYPT_METHOD"
+        line: "ENCRYPT_METHOD MD5"
+        state: present
+        create: no
+        backrefs: yes
+      ignore_errors: yes
+  
+    - name: configure sshd
+      lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regexp: "^(#)?PasswordAuthentication.*"
+        line: "PasswordAuthentication yes"
+        state: present
+      notify:
+      - restart_sshd
+  
+    - name: add sudoers users to wheel group
+      user:
+        name: packer
+        groups: wheel
+        append: yes
+        state: present
+        createhome: yes
+        password: "{{ ssh_password }}"
+  
+  handlers:
+    - name: restart_sshd
+      service:
+        name: sshd
+        state: restarted
+  
