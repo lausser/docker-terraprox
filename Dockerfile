@@ -46,7 +46,6 @@ COPY .terraformrc /home/terraform
 RUN chown -R terraform:terraform /home/terraform/*
 RUN chmod 755 /home/terraform/run.sh
 RUN chmod 755 /home/terraform/functions.sh
-COPY Changelog /home/terraform
 ADD VERSION .
 COPY VERSION /home/terraform
 
