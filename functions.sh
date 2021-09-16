@@ -19,7 +19,7 @@ run_terraform_apply() {
     # maybe concurrent operations
     # retry after a random time
     cat terraform.log
-    if grep --quiet "Error acquiring the state lock" terraform.apply.log; then
+    if grep -q "Error acquiring the state lock" terraform.apply.log; then
       id=$(awk -F: '/ID:/ { print $2 }')
       echo try to unlock
       sleep $(($RANDOM %10))
@@ -121,7 +121,7 @@ setup_tfvars() {
   setup_tfvars_${virtualization} "${vmname}" "${vmdesc}" "${distro}"
   # terraform apply will use SSH_PASSWORD to initially run ansible
   # ansible will set the root/packer password to SSH_PASSWORD+UNIQUE_TAG
-  cat <<==EOTFVAR > ${virtualization}_vars.tfvars
+  cat <<==EOTFVAR >> ${virtualization}_vars.tfvars
 otf_ssh_password_encrypted = "${otf_ssh_password_encrypted}"
 ==EOTFVAR
 }

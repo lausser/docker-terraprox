@@ -55,27 +55,12 @@ resource "proxmox_vm_qemu" "instance" {
     # has preference over the password
 #    private_key = data.local_file.private_key.content
   }
-  provisioner "remote-exec" {
-    inline = [
-      "/sbin/ip a"
-    ]
-  }
-  provisioner "local-exec" {
-    command =<<EOCMD
-    printf "[defaults]\nhost_key_checking = False\n" > ~/.ansible.cfg
-    ansible -m ping -i ${self.ssh_host}, -u ${var.ssh_user} --extra-vars ansible_ssh_pass=${var.ssh_password} all
-    EOCMD
-  }
+
   provisioner "local-exec" {
     command =<<EOCMD
     if [ -f terraform-plugin-proxmox.log ]; then
       cat terraform-plugin-proxmox.log
     fi
-    EOCMD
-  }
-  provisioner "local-exec" {
-    command =<<EOCMD
-    ansible-playbook ansible/playbooks/${var.ansible_playbook} -i ${self.public_ip}, -u ${var.ssh_user} -b --extra-vars 'otf_ssh_password=${var.otf_ssh_password_encrypted}'
     EOCMD
   }
 }

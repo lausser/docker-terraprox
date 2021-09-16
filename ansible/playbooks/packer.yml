@@ -17,25 +17,6 @@
         dest: /etc/sudoers.d/wheel_nopasswd
         mode: 0440
   
-    - name: allow older password encryptions
-      lineinfile:
-        path: "/etc/login.defs"
-        regexp: "^ENCRYPT_METHOD"
-        line: "ENCRYPT_METHOD MD5"
-        state: present
-        create: no
-        backrefs: yes
-      ignore_errors: yes
-  
-    - name: configure sshd
-      lineinfile:
-        path: "/etc/ssh/sshd_config"
-        regexp: "^(#)?PasswordAuthentication.*"
-        line: "PasswordAuthentication yes"
-        state: present
-      notify:
-      - restart_sshd
-  
     - name: add sudoers users to wheel group
       user:
         name: packer
@@ -44,19 +25,3 @@
         state: present
         createhome: yes
 
-  - name: update root password on the fly
-    user:
-      name: root
-      password: "{{ otf_ssh_password }}"
-
-  - name: update packer password on the fly
-    user:
-      name: packer
-      password: "{{ otf_ssh_password }}"
-  
-  handlers:
-    - name: restart_sshd
-      service:
-        name: sshd
-        state: restarted
-  

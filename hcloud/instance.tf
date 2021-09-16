@@ -17,15 +17,4 @@ resource "hcloud_server" "instance" {
     #private_key = "${file("~/.ssh/id_rsa")}"
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "export PATH=/usr/bin:/bin:/usr/sbin:/sbin",
-      "ip a"
-    ]
-  }
-  provisioner "local-exec" {
-    command =<<EOCMD
-    ansible-playbook ansible/playbooks/${var.ansible_playbook} -i ${self.public_ip}, -u ${var.ssh_user} -b --extra-vars 'otf_ssh_password=${var.otf_ssh_password_encrypted}'
-    EOCMD
-  }
 }

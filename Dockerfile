@@ -42,6 +42,7 @@ COPY aws/ /home/terraform/aws
 COPY hcloud/ /home/terraform/hcloud
 COPY ansible/ /home/terraform/ansible
 COPY consul/ /home/terraform/consul
+COPY provision.tf /home/terraform
 COPY .terraformrc /home/terraform
 RUN chown -R terraform:terraform /home/terraform/*
 RUN chmod 755 /home/terraform/run.sh
