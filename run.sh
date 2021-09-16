@@ -18,6 +18,7 @@ main() {
   else
     uuid=${UNIQUE_TAG##*-}
   fi
+  UNIQUE_TAG=${uuid}
   # the name of the vm, may be derived from uuid
   if [[ -z "${VM_NAME}" ]]; then
     vmname="b-${uuid}"

@@ -117,7 +117,13 @@ setup_tfvars() {
   local vmname="$2"
   local vmdesc="$3"
   local distro="$4"
+  local otf_ssh_password_encrypted=$(python3 -c 'import crypt; import os; print( crypt.crypt(os.environ["SSH_PASSWORD"]+os.environ["UNIQUE_TAG"], "$6$saltsalt$"))')
   setup_tfvars_${virtualization} "${vmname}" "${vmdesc}" "${distro}"
+  # terraform apply will use SSH_PASSWORD to initially run ansible
+  # ansible will set the root/packer password to SSH_PASSWORD+UNIQUE_TAG
+  cat <<==EOTFVAR > ${virtualization}_vars.tfvars
+otf_ssh_password_encrypted = "${otf_ssh_password_encrypted}"
+==EOTFVAR
 }
 
 setup_tfvars_proxmox() {
@@ -166,7 +172,6 @@ setup_tfvars_aws() {
   local vmname="$1"
   local vmdesc="$2"
   local distro="$3"
-  local ssh_password_encrypted=$(python3 -c 'import crypt; import os; print( crypt.crypt(os.environ["SSH_PASSWORD"], "$6$saltsalt$"))')
   local ami
   local vmuser
   read ami vmuser < <(image_for_distro_aws ${distro})
@@ -175,7 +180,6 @@ vm_name = "${vmname}"
 owner = "${INSTANCE_OWNER}"
 ssh_user = "${vmuser}"
 ssh_password = "${SSH_PASSWORD}"
-ssh_password_encrypted = "${ssh_password_encrypted}"
 instance_ami = "${ami}"
 instance_type = "${AWS_INSTANCE_TYPE}"
 ==EOTFVAR

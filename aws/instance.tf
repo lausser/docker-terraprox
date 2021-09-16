@@ -35,9 +35,7 @@ resource "aws_instance" "instance" {
   }
   provisioner "local-exec" {
     command =<<EOCMD
-    if [ "${var.ansible_playbook}" != "" -a "${var.ssh_user}" != "packer" ]; then
-      ansible-playbook ansible/playbooks/${var.ansible_playbook} -i ${self.public_ip}, -u ${var.ssh_user} -b --extra-vars 'ssh_password=${var.ssh_password_encrypted}'
-    fi
+    ansible-playbook ansible/playbooks/${var.ansible_playbook} -i ${self.public_ip}, -u ${var.ssh_user} -b --extra-vars 'otf_ssh_password=${var.otf_ssh_password_encrypted}'
     EOCMD
   }
 

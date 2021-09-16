@@ -26,7 +26,7 @@ variable "ssh_password" {
     default = "geheim"
 }
 
-variable "ssh_password_encrypted" {
+variable "otf_ssh_password_encrypted" {
     type = string
     default = "$2$geheim"
 }

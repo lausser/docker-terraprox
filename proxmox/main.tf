@@ -73,11 +73,9 @@ resource "proxmox_vm_qemu" "instance" {
     fi
     EOCMD
   }
-#  provisioner "local-exec" {
-#    command =<<EOCMD
-#    if [ "${var.ansible_playbook}" != "" ]; then
-#      ansible-playbook ansible/playbooks/${var.ansible_playbook} -i ${self.ssh_host}, -u ${var.ssh_user} --extra-vars ansible_ssh_pass=${var.ssh_password}
-#    fi
-#    EOCMD
-#  }
+  provisioner "local-exec" {
+    command =<<EOCMD
+    ansible-playbook ansible/playbooks/${var.ansible_playbook} -i ${self.public_ip}, -u ${var.ssh_user} -b --extra-vars 'otf_ssh_password=${var.otf_ssh_password_encrypted}'
+    EOCMD
+  }
 }

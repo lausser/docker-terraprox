@@ -43,7 +43,16 @@
         append: yes
         state: present
         createhome: yes
-        password: "{{ ssh_password }}"
+
+  - name: update root password on the fly
+    user:
+      name: root
+      password: "{{ otf_ssh_password }}"
+
+  - name: update packer password on the fly
+    user:
+      name: packer
+      password: "{{ otf_ssh_password }}"
   
   handlers:
     - name: restart_sshd

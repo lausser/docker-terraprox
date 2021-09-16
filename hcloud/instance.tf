@@ -23,4 +23,9 @@ resource "hcloud_server" "instance" {
       "ip a"
     ]
   }
+  provisioner "local-exec" {
+    command =<<EOCMD
+    ansible-playbook ansible/playbooks/${var.ansible_playbook} -i ${self.public_ip}, -u ${var.ssh_user} -b --extra-vars 'otf_ssh_password=${var.otf_ssh_password_encrypted}'
+    EOCMD
+  }
 }

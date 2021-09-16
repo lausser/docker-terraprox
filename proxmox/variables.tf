@@ -8,6 +8,11 @@ variable "ssh_password" {
     default = "geheim"
 }
 
+variable "otf_ssh_password_encrypted" {
+    type = string
+    default = "$2$geheim"
+}
+
 variable "target_node" {
     type = string
     default = "vm02"
