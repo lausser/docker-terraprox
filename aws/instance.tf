@@ -29,5 +29,11 @@ resource "aws_instance" "instance" {
     #password = rsadecrypt(self.password_data, file("<path to the private key>"))
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "echo connected"
+    ]
+  }
+
 }
 

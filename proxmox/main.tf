@@ -63,4 +63,11 @@ resource "proxmox_vm_qemu" "instance" {
     fi
     EOCMD
   }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo connected"
+    ]
+  }
+
 }

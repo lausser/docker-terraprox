@@ -17,4 +17,10 @@ resource "hcloud_server" "instance" {
     #private_key = "${file("~/.ssh/id_rsa")}"
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "echo connected"
+    ]
+  }
+
 }
