@@ -26,7 +26,7 @@ run_terraform_apply() {
       terraform force-unlock ${id}
     fi
     sleep $(($RANDOM %300))
-    run_terraform_destroy
+    run_terraform_destroy ${virtualization}
     sleep $(($RANDOM %60))
     rm -f terraform.log
     terraform apply \
