@@ -20,7 +20,7 @@ run_terraform_apply() {
     # retry after a random time
     cat terraform.log
     if grep -q "Error acquiring the state lock" terraform.apply.log; then
-      id=$(awk -F: '/ID:/ { print $2 }')
+      id=$(awk -F: '/ID:/ { print $2 }' terraform.apply.log)
       echo try to unlock
       sleep $(($RANDOM %10))
       terraform force-unlock ${id}
