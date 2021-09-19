@@ -23,10 +23,11 @@ run_terraform_apply() {
       id=$(awk -F: '/ID:/ { print $2 }' terraform.apply.log)
       echo try to unlock
       sleep $(($RANDOM %10))
-      terraform force-unlock ${id}
+      terraform force-unlock -force ${id}
+    else
+      sleep $(($RANDOM %60))
+      run_terraform_destroy ${virtualization}
     fi
-    sleep $(($RANDOM %300))
-    run_terraform_destroy ${virtualization}
     sleep $(($RANDOM %60))
     rm -f terraform.log
     terraform apply \
