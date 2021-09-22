@@ -15,6 +15,12 @@ variable "instance_type" {
   default     = "cx21"
 }
 
+variable "instance_location" {
+  description = "Location of the instance"
+  type        = string
+  default     = "nbg1"
+}
+
 variable "ssh_user" {
   description = "Name of the ssh user"
   type        = string
