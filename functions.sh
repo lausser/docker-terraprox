@@ -166,7 +166,7 @@ ssh_password = "${SSH_PASSWORD}"
 image = "${distro}"
 instance_type = "${HCLOUD_INSTANCE_TYPE}"
 ==EOTFVAR
-  if [[ -n "$HCLOUD_PRIVATE_NETWORK ]]; then
+  if [[ -n "$HCLOUD_PRIVATE_NETWORK" ]]; then
     cat <<==EOTFVAR >> ${virtualization}_vars.tfvars
 private_network = "${HCLOUD_PRIVATE_NETWORK}"
 ==EOTFVAR
