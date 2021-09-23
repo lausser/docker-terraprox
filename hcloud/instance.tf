@@ -3,7 +3,7 @@ data "hcloud_image" "thisimage" {
 }
 
 data "hcloud_network" "private_network" {
-  with_selector = "name${var.private_network}"
+  with_selector = "name=${var.private_network}"
 }
 
 resource "hcloud_server" "instance" {
@@ -11,12 +11,12 @@ resource "hcloud_server" "instance" {
   image = data.hcloud_image.thisimage.id
   server_type = var.instance_type
   location = var.instance_location
-  network = [{
+  network {
     #alias_ips   = []
     #ip          = null
     #mac_address = null
     network_id  = data.hcloud_network.private_network.id
-  }]
+  }
   #datacenter = "${var.datacenter}"
   #ssh_keys = [ "${hcloud_ssh_key.local.id}" ]
 
