@@ -22,9 +22,16 @@ variable "instance_location" {
 }
 
 variable "private_network" {
-  description = "A n optional private network"
-  type        = string
-  default     = null
+  description = "An optional private network"
+  type = set(object(
+    {
+      alias_ips   = set(string)
+      ip          = string
+      mac_address = string
+      network_id  = number
+    }
+  ))
+  default = []
 }
 
 variable "ssh_user" {
