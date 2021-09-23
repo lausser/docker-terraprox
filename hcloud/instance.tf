@@ -3,7 +3,7 @@ data "hcloud_image" "thisimage" {
 }
 
 data "hcloud_network" "private_network" {
-  with_selector = urlencode("name=${var.private_network}")
+  name = "${urlencode(var.private_network)}"
 }
 
 resource "hcloud_server" "instance" {
