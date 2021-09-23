@@ -21,6 +21,12 @@ variable "instance_location" {
   default     = "nbg1"
 }
 
+variable "private_network" {
+  description = "A n optional private network"
+  type        = string
+  default     = null
+}
+
 variable "ssh_user" {
   description = "Name of the ssh user"
   type        = string

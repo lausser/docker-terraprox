@@ -7,6 +7,7 @@ resource "hcloud_server" "instance" {
   image = data.hcloud_image.thisimage.id
   server_type = var.instance_type
   location = var.instance_location
+  network = var.private_network
   #datacenter = "${var.datacenter}"
   #ssh_keys = [ "${hcloud_ssh_key.local.id}" ]
 

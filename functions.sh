@@ -161,11 +161,16 @@ setup_tfvars_hcloud() {
   cat <<==EOTFVAR > ${virtualization}_vars.tfvars
 vm_name = "${vmname}"
 owner = "${INSTANCE_OWNER}"
-ssh_user = "$vmuser"
+ssh_user = "${vmuser}"
 ssh_password = "${SSH_PASSWORD}"
 image = "${distro}"
 instance_type = "${HCLOUD_INSTANCE_TYPE}"
 ==EOTFVAR
+  if [[ -n "$HCLOUD_PRIVATE_NETWORK ]]; then
+    cat <<==EOTFVAR >> ${virtualization}_vars.tfvars
+private_network = "${HCLOUD_PRIVATE_NETWORK}"
+==EOTFVAR
+  fi
 }
 
 
