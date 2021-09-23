@@ -11,12 +11,6 @@ resource "hcloud_server" "instance" {
   image = data.hcloud_image.thisimage.id
   server_type = var.instance_type
   location = var.instance_location
-  network {
-    #alias_ips   = []
-    #ip          = null
-    #mac_address = null
-    network_id  = data.hcloud_network.private_network.id
-  }
   #datacenter = "${var.datacenter}"
   #ssh_keys = [ "${hcloud_ssh_key.local.id}" ]
 
@@ -35,3 +29,10 @@ resource "hcloud_server" "instance" {
   }
 
 }
+
+resource "hcloud_server_network" "srvnetwork" {
+  count = var.private_network != "" ? 1 : 0
+  server_id  = hcloud_server.instance.id
+  network_id  = data.hcloud_network.private_network.id
+}
+
