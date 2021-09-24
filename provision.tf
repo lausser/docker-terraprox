@@ -30,5 +30,11 @@ resource "null_resource" "cluster" {
     EOCMD
   }
 
+  provisioner "local-exec" {
+    command =<<EOCMD
+    ansible-playbook ansible/playbooks/route.yml -i ${local.instance_public_ip}, -u ${var.ssh_user} -b
+    EOCMD
+  }
+
 }
 
