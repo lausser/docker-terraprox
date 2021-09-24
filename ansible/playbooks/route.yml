@@ -1,47 +1,51 @@
-- name: remove unwanted routes
-  copy: 
-    dest: /etc/rc.d/init.d/del-priv-default-route
-    content: |
-      #! /bin/bash
-      
-      # Flush default routes to private networks
-      # chkconfig: - 98 1
-      # description: Flush default routes to private networks
-      
-      
-      ### BEGIN INIT INFO
-      # Provides:          proper-route
-      # Required-Start:    $network
-      # Required-Stop:     $network
-      # Should-Start:      $network
-      # Default-Start:     2 3 4 5
-      # Default-Stop:      0 1 6
-      # Short-Description: Flush unwanted default routes
-      # Description:       Flush unwanted default routes to 10.x.x.x
-      ### END INIT INFO
-      
-      case "$1" in
-          start)
-              echo "deleting default routes via private network"
-              ip r | grep "default via 10.[0-9]*.[0-9]*.[0-9]* dev" | while read rt
-              do
-                  ip r del $rt
-              done
-          ;;
-          stop)
-          ;;
-          restart)
-          ;;
-          reload)
-          ;;
-          status)
-              echo "default routes:"
-              ip r | grep default
-          ;;
-      esac
-
-- name: enable the init-script
-  systemd:
-    name: del-priv-default-route
-    enabled: yes
-
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: remove unwanted routes
+    copy: 
+      dest: /etc/rc.d/init.d/del-priv-default-route
+      content: |
+        #! /bin/bash
+        
+        # Flush default routes to private networks
+        # chkconfig: - 98 1
+        # description: Flush default routes to private networks
+        
+        
+        ### BEGIN INIT INFO
+        # Provides:          proper-route
+        # Required-Start:    $network
+        # Required-Stop:     $network
+        # Should-Start:      $network
+        # Default-Start:     2 3 4 5
+        # Default-Stop:      0 1 6
+        # Short-Description: Flush unwanted default routes
+        # Description:       Flush unwanted default routes to 10.x.x.x
+        ### END INIT INFO
+        
+        case "$1" in
+            start)
+                echo "deleting default routes via private network"
+                ip r | grep "default via 10.[0-9]*.[0-9]*.[0-9]* dev" | while read rt
+                do
+                    ip r del $rt
+                done
+            ;;
+            stop)
+            ;;
+            restart)
+            ;;
+            reload)
+            ;;
+            status)
+                echo "default routes:"
+                ip r | grep default
+            ;;
+        esac
+  
+  - name: enable the init-script
+    systemd:
+      name: del-priv-default-route
+      enabled: yes
+  
