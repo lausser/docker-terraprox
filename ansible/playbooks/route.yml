@@ -5,6 +5,7 @@
   - name: remove unwanted routes
     copy: 
       dest: /etc/rc.d/init.d/del-priv-default-route
+      mode: 0755
       content: |
         #! /bin/bash
         
