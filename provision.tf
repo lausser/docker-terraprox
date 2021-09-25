@@ -1,4 +1,4 @@
-resource "null_resource" "cluster" {
+resource "null_resource" "provisioning" {
   triggers = {
     public_ip = local.instance_public_ip
   }

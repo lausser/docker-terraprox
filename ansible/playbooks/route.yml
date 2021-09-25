@@ -4,48 +4,43 @@
   tasks:
   - name: remove unwanted routes
     copy: 
-      dest: /etc/init.d/del-priv-default-route
+      dest: /usr/local/bin/del-priv-default-route
       mode: 0755
       content: |
         #! /bin/bash
         
-        # Flush default routes to private networks
-        # chkconfig: - 98 1
-        # description: Flush default routes to private networks
+        echo "deleting default routes via private network"
+        ip link | awk -F: '$1 ~ /^[0-9]/ {gsub(/ /, "", $2); print $2}' | while read intf
+        do
+            ip link set $intf up
+        done
+        sleep 1
+        dhclient
+        sleep 1
+        ip r | grep "default via 10.[0-9]*.[0-9]*.[0-9]* dev" | while read rt
+        do
+            ip r del $rt
+        done
+
+  - name: configure as one-shot service
+    copy:
+      dest: /etc/systemd/system/del-priv-default-route
+      mode: 0755
+      content: |
+        [Unit]
+        Description=Delete unwanted default routes to private networks
+        After=network-online.target
         
+        [Service]
+        Type=oneshot
+        ExecStart=/usr/local/bin/del-priv-default-route
+        RemainAfterExit=true
+        StandardOutput=journal
         
-        ### BEGIN INIT INFO
-        # Provides:          proper-route
-        # Required-Start:    $network
-        # Required-Stop:     $network
-        # Should-Start:      $network
-        # Default-Start:     2 3 4 5
-        # Default-Stop:      0 1 6
-        # Short-Description: Flush unwanted default routes
-        # Description:       Flush unwanted default routes to 10.x.x.x
-        ### END INIT INFO
-        
-        case "$1" in
-            start)
-                echo "deleting default routes via private network"
-                ip r | grep "default via 10.[0-9]*.[0-9]*.[0-9]* dev" | while read rt
-                do
-                    ip r del $rt
-                done
-            ;;
-            stop)
-            ;;
-            restart)
-            ;;
-            reload)
-            ;;
-            status)
-                echo "default routes:"
-                ip r | grep default
-            ;;
-        esac
-  
-  - name: enable the init-script
+        [Install]
+        WantedBy=multi-user.target
+
+  - name: enable the service
     systemd:
       name: del-priv-default-route
       enabled: yes

@@ -34,5 +34,7 @@ resource "hcloud_server_network" "srvnetwork" {
   count = var.private_network != "" ? 1 : 0
   server_id  = hcloud_server.instance.id
   network_id  = data.hcloud_network.private_network.id
+
+  depends_on = [null_resource.provisioning]
 }
 
