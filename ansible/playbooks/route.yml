@@ -24,7 +24,7 @@
 
   - name: configure as one-shot service
     copy:
-      dest: /etc/systemd/system/del-priv-default-route
+      dest: /etc/systemd/system/del-priv-default-route.service
       mode: 0755
       content: |
         [Unit]
