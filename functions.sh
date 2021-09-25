@@ -2,7 +2,7 @@
 
 run_terraform_apply() {
   local virtualization="$1"
-  export TF_LOG=TRACE
+  #export TF_LOG=TRACE
   export TF_LOG_PATH="terraform.log"
   rm -f terraform.log
   rm -f terraform.apply.log
@@ -41,7 +41,7 @@ run_terraform_apply() {
 
 run_terraform_destroy() {
   local virtualization="$1"
-  export TF_LOG=TRACE
+  #export TF_LOG=TRACE
   export TF_LOG_PATH="terraform.log"
   rm -f terraform.log
   rm -f terraform.destroy.log
