@@ -1,5 +1,5 @@
 ARG SSH_PASSPHRASE=geheim
-FROM hashicorp/terraform:1.0.1
+FROM hashicorp/terraform:1.0.8
 
 RUN apk add --no-cache make musl-dev go rsync shadow python3
 RUN apk add --no-cache bash python3-dev
@@ -24,15 +24,20 @@ ENV GOPROXY=https://goproxy.io,direct
 ENV GO111MODULE=on
 RUN echo terraform-provider-proxmox 0d6e7d75f4086f54575473d705cbc01853ee21a7
 RUN go get github.com/Telmate/terraform-provider-proxmox
-
 RUN cp go/bin/terraform-provider-proxmox /usr/local/bin
+
+RUN go get github.com/hetznercloud/terraform-provider-hcloud@v1.31.1
+RUN cp go/bin/terraform-provider-hcloud /usr/local/bin
+
 RUN rm -rf go
 
 USER terraform
 WORKDIR /home/terraform
 RUN mkdir -p ./usr/share/terraform/plugins/terraform.local/local/proxmox/1.0.0/linux_amd64 && \
     cp /usr/local/bin/terraform-provider-proxmox ./usr/share/terraform/plugins/terraform.local/local/proxmox/1.0.0/linux_amd64/
-# no provisioner needed for cloud-init
+# no proxmox provisioner needed for cloud-init
+RUN mkdir -p ./usr/share/terraform/plugins/terraform.local/local/hcloud/1.31.1/linux_amd64 && \
+    cp /usr/local/bin/terraform-provider-hcloud ./usr/share/terraform/plugins/terraform.local/local/hcloud/1.31.1/linux_amd64/
 
 USER root
 COPY run.sh /home/terraform
