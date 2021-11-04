@@ -22,7 +22,8 @@ ENV GOPROXY=https://goproxy.io,direct
 #    cp go/bin/proxmox-api-go /usr/local/bin
 
 ENV GO111MODULE=on
-RUN echo terraform-provider-proxmox 0d6e7d75f4086f54575473d705cbc01853ee21a7
+# v2.9.0
+RUN echo terraform-provider-proxmox cd9e5a489633a988482ca8abd0f29c23e536a96d
 RUN go get github.com/Telmate/terraform-provider-proxmox
 RUN cp go/bin/terraform-provider-proxmox /usr/local/bin
 
