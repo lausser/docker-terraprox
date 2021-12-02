@@ -1,5 +1,24 @@
 #! /bin/bash
 
+run_terraform_init() {
+  if [[ -n "${CONSUL_ADDRESS}" ]]; then
+    enable_consul
+    terraparams="-backend-config=address=${CONSUL_ADDRESS} -backend-config=path=terraform/${vmname}"
+  else
+    terraparams==""
+  fi
+  terraform $terraparams
+  terraformrc=$?
+  if [[ $terraformrc -ne 0 ]]; then
+    # Error while installing hashicorp/consul v2.14.0: could not query provider
+    # net/http: request canceled while waiting for connection (Client.Timeout
+    sleep 120
+    terraform $terraparams
+    terraformrc=$?
+  fi
+  return $terraformrc
+}
+
 run_terraform_apply() {
   local virtualization="$1"
   #export TF_LOG=TRACE

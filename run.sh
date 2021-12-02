@@ -42,13 +42,8 @@ main() {
   setup_tfvars ${virtualization} "${vmname}" "${vmdesc}" "${distro}"
 
   terraformrc=0
-  if [[ -n "${CONSUL_ADDRESS}" ]]; then
-    enable_consul
-    terraform init -backend-config="address=${CONSUL_ADDRESS}" -backend-config="path=terraform/${vmname}"
-  else
-    terraform init
-  fi
-
+  run_terraform_init
+  terraformrc=$?
 
   if [[ "$1" == "shell" ]]; then
     bash
