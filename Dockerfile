@@ -1,5 +1,5 @@
 ARG SSH_PASSPHRASE=geheim
-FROM hashicorp/terraform:1.0.8
+FROM hashicorp/terraform:1.0.11
 
 RUN apk add --no-cache make musl-dev go rsync shadow python3
 RUN apk add --no-cache bash python3-dev
@@ -22,12 +22,11 @@ ENV GOPROXY=https://goproxy.io,direct
 #    cp go/bin/proxmox-api-go /usr/local/bin
 
 ENV GO111MODULE=on
-# v2.9.0
-RUN echo terraform-provider-proxmox cd9e5a489633a988482ca8abd0f29c23e536a96d
-RUN go get github.com/Telmate/terraform-provider-proxmox
+RUN echo terraform-provider-proxmox cd8a706be057690f0bc8931951981382ff5ca818
+RUN go get github.com/Telmate/terraform-provider-proxmox@v2.9.3
 RUN cp go/bin/terraform-provider-proxmox /usr/local/bin
 
-RUN go get github.com/hetznercloud/terraform-provider-hcloud@v1.31.1
+RUN go get github.com/hetznercloud/terraform-provider-hcloud@v1.32.1
 RUN cp go/bin/terraform-provider-hcloud /usr/local/bin
 
 RUN rm -rf go
