@@ -7,13 +7,13 @@ run_terraform_init() {
   else
     terraparams==""
   fi
-  terraform $terraparams
+  terraform init $terraparams
   terraformrc=$?
   if [[ $terraformrc -ne 0 ]]; then
     # Error while installing hashicorp/consul v2.14.0: could not query provider
     # net/http: request canceled while waiting for connection (Client.Timeout
     sleep 120
-    terraform $terraparams
+    terraform init $terraparams
     terraformrc=$?
   fi
   return $terraformrc
