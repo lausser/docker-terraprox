@@ -1,0 +1,16 @@
+PM_USER=packer@pve
+PM_PASS="Sommer10!"
+PM_API_URL=https://10.0.13.13:8006/api2/json
+# the proxmox template
+DISTRIBUTION=sles-15.2
+# register ip address under nslookup/{vm_name}
+##CONSUL_ADDRESS=consul-ui.infra-build"
+# set VM password via cloud-init
+SSH_PASSWORD="Sommer10"
+# VM_NAME=
+# either VM_NAME or DISTRIBUTION(mandatory)+PRODUCT(not yet mandatory)+UNIQUE_TAG
+# PRODUCT="omd"
+# UNIQUE_TAG="dnstest"
+# if empty, VM name will be "b-${product}-${distri}-${uuid}"
+PM_NODE="vm01"
+UNIQUE_TAG=xxx

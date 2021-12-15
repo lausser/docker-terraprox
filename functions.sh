@@ -5,7 +5,7 @@ run_terraform_init() {
     enable_consul
     terraparams="-backend-config=address=${CONSUL_ADDRESS} -backend-config=path=terraform/${vmname}"
   else
-    terraparams==""
+    terraparams=""
   fi
   terraform init $terraparams
   terraformrc=$?
