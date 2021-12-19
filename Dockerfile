@@ -23,8 +23,8 @@ ENV GOPROXY=https://goproxy.io,direct
 
 ENV GO111MODULE=on
 RUN go clean -modcache
-RUN echo terraform-provider-proxmox cd8a706be057690f0bc8931951981382ff5ca818
-RUN echo terraform-provider-proxmox@v2.9.3 geht nicht, weil go = dreck
+RUN echo terraform-provider-proxmox ae544b54356f28e470f201ed512bf2338868d625
+RUN echo terraform-provider-proxmox@v2.8.0 geht nicht, weil go = dreck
 RUN go get github.com/Telmate/terraform-provider-proxmox
 RUN cp go/bin/terraform-provider-proxmox /usr/local/bin
 
