@@ -1,5 +1,5 @@
 PM_USER=packer@pve
-PM_PASS="Sommer10!"
+PM_PASS='Sommer10!'
 PM_API_URL=https://10.0.13.13:8006/api2/json
 # the proxmox template
 DISTRIBUTION=sles-15.2

@@ -1,5 +1,5 @@
 ARG SSH_PASSPHRASE=geheim
-FROM hashicorp/terraform:1.0.11
+FROM hashicorp/terraform:1.1.3
 
 RUN apk add --no-cache make musl-dev go rsync shadow python3
 RUN apk add --no-cache bash python3-dev
@@ -13,33 +13,27 @@ RUN pip3 install ruamel.yaml
 RUN groupadd -r terraform -g 9901 && useradd -u 9901 --no-log-init -m -r -g terraform terraform
 
 WORKDIR /root
-ENV GO111MODULE=auto
 ENV GOPROXY=https://goproxy.io,direct
-
-#RUN echo proxmox-api-go 5b9c621ea0cd5b401c7ddcaff659e47add27772e
-#RUN go get github.com/Telmate/proxmox-api-go && \
-#    go install github.com/Telmate/proxmox-api-go && \
-#    cp go/bin/proxmox-api-go /usr/local/bin
-
 ENV GO111MODULE=on
 RUN go clean -modcache
-RUN echo terraform-provider-proxmox ae544b54356f28e470f201ed512bf2338868d625
-RUN echo terraform-provider-proxmox@v2.8.0 geht nicht, weil go = dreck
-RUN go get github.com/Telmate/terraform-provider-proxmox
+
+RUN echo terraform-provider-proxmox 72c6277 = release 2.9.4
+RUN echo terraform-provider-proxmox@v2.9.4 geht nicht, weil go = dreck
+RUN go install github.com/Telmate/terraform-provider-proxmox@72c6277
 RUN cp go/bin/terraform-provider-proxmox /usr/local/bin
 
-RUN go get github.com/hetznercloud/terraform-provider-hcloud@v1.32.1
+RUN go get github.com/hetznercloud/terraform-provider-hcloud@v1.32.2
 RUN cp go/bin/terraform-provider-hcloud /usr/local/bin
 
 RUN rm -rf go
 
 USER terraform
 WORKDIR /home/terraform
-RUN mkdir -p ./usr/share/terraform/plugins/terraform.local/local/proxmox/1.0.0/linux_amd64 && \
-    cp /usr/local/bin/terraform-provider-proxmox ./usr/share/terraform/plugins/terraform.local/local/proxmox/1.0.0/linux_amd64/
+RUN mkdir -p ./usr/share/terraform/plugins/terraform.local/local/proxmox/2.9.4/linux_amd64 && \
+    cp /usr/local/bin/terraform-provider-proxmox ./usr/share/terraform/plugins/terraform.local/local/proxmox/2.9.4/linux_amd64/
 # no proxmox provisioner needed for cloud-init
-RUN mkdir -p ./usr/share/terraform/plugins/terraform.local/local/hcloud/1.31.1/linux_amd64 && \
-    cp /usr/local/bin/terraform-provider-hcloud ./usr/share/terraform/plugins/terraform.local/local/hcloud/1.31.1/linux_amd64/
+RUN mkdir -p ./usr/share/terraform/plugins/terraform.local/local/hcloud/1.32.2/linux_amd64 && \
+    cp /usr/local/bin/terraform-provider-hcloud ./usr/share/terraform/plugins/terraform.local/local/hcloud/1.32.2/linux_amd64/
 
 USER root
 COPY run.sh /home/terraform
